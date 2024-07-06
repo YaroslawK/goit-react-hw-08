@@ -8,13 +8,18 @@ export const register = createAsyncThunk(
   'auth/register',
   async (userData, thunkAPI) => {
     try {
-      console.log('Sending user data:', userData); 
+      
       const response = await axios.post('https://connections-api.goit.global/users/signup', userData);
-      console.log('Response data:', response.data); 
+       axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
       return response.data;
     } catch (error) {
-      console.error('Error response:', error.response.data); 
-      return thunkAPI.rejectWithValue(error.response.data);
+      console.error('Error response:', error.response);
+      if (error.response && error.response.status === 400) {
+        if (error.response.data.code === 11000) {
+          return thunkAPI.rejectWithValue('Email already exists');
+        }
+      }
+      return thunkAPI.rejectWithValue(error.response?.data || 'Registration failed');
     }
   }
 );

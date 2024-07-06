@@ -23,9 +23,10 @@ const ContactForm = () => {
   });
 
   const handleSubmit = (values, { resetForm }) => {
-    dispatch(addContact({ name: values.name, phone: values.number }));
+    dispatch(addContact({ name: values.name, number: values.number }));
     resetForm();
   };
+
 
   return (
     <Formik

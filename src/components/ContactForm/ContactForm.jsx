@@ -1,7 +1,8 @@
 import { Field, Form, Formik, ErrorMessage } from 'formik';
 import * as Yup from "yup";
 import { useDispatch } from 'react-redux';
-import { addContact } from '../../redux/contactsOps';
+import { addContact } from '../../redux/contacts/contactsOps';
+import css from './ContactForm.module.css'
 
 const ContactForm = () => {
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ const ContactForm = () => {
         <label htmlFor="number">Number</label><br />
         <Field type="text" name="number" /><br />
         <ErrorMessage name="number" component="div" className="error" /><br />
-        <button type="submit">Add contact</button>
+        <button type="submit" className={css.addContactBtn}>Add contact</button>
       </Form>
     </Formik>
   );

@@ -4,3 +4,9 @@
     gap:  20px ;
     flex-wrap: wrap;
 }
+
+.contactListItem{
+    border-radius: 5%;
+    border: solid 1px rgb(226, 48, 226);;
+    padding: 10px;
+}

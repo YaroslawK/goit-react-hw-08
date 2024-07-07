@@ -1,6 +1,8 @@
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
 axios.defaults.baseURL = 'https://connections-api.goit.global'; 
 
@@ -13,6 +15,10 @@ export const register = createAsyncThunk(
        axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
       return response.data;
     } catch (error) {
+      iziToast.error({
+        title: 'Error',
+        message: error.message || 'Failed to register. Please try again.',
+      });
       console.error('Error response:', error.response);
       if (error.response && error.response.status === 400) {
         if (error.response.data.code === 11000) {
@@ -34,6 +40,10 @@ export const login = createAsyncThunk(
       console.log('Response data:', data); 
       return data;
     } catch (error) {
+      iziToast.error({
+        title: 'Error',
+        message: 'Failed to log in. Please try again.',
+      });
          console.error('Error response:', error.response.data); 
       return thunkAPI.rejectWithValue(error.response.data);
     }

@@ -6,13 +6,20 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 axios.defaults.baseURL = 'https://connections-api.goit.global'; 
 
+export const setAuthHeader = (token) => {
+  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+};
+
+export const clearAuthHeader = () => {
+  axios.defaults.headers.common.Authorization = '';
+};
+
 export const register = createAsyncThunk(
   'auth/register',
   async (userData, thunkAPI) => {
     try {
-      
-      const response = await axios.post('https://connections-api.goit.global/users/signup', userData);
-       axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
+      const response = await axios.post('/users/signup', userData);
+      setAuthHeader(response.data.token); 
       return response.data;
     } catch (error) {
       iziToast.error({
@@ -36,7 +43,7 @@ export const login = createAsyncThunk(
     try {
       console.log('Sending user data:', credentials); 
       const { data } = await axios.post('/users/login', credentials);
-      axios.defaults.headers.common.Authorization = `Bearer ${data.token}`;
+      setAuthHeader(data.token); 
       console.log('Response data:', data); 
       return data;
     } catch (error) {
@@ -44,7 +51,7 @@ export const login = createAsyncThunk(
         title: 'Error',
         message: 'Failed to log in. Please try again.',
       });
-         console.error('Error response:', error.response.data); 
+      console.error('Error response:', error.response.data); 
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }
@@ -55,7 +62,7 @@ export const logout = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       await axios.post('/users/logout');
-      axios.defaults.headers.common.Authorization = '';
+      clearAuthHeader(); 
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
@@ -73,7 +80,7 @@ export const refreshUser = createAsyncThunk(
     }
 
     try {
-      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+      setAuthHeader(token);
       const { data } = await axios.get('/users/current');
       return data;
     } catch (error) {
